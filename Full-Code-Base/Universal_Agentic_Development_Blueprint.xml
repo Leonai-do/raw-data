@@ -1,0 +1,2859 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+00-preamble.md
+01-foundational-principles.md
+02-development-lifecycle.md
+03-agent-interaction-protocol.md
+04-file-modification-rules.md
+05-search-efficiency.md
+06-code-style-standards.md
+07-tech-stack-reference.md
+08-cicd-quality-gates.md
+09-testing-strategy.md
+10-pr-commit-hygiene.md
+11-task-tracking-protocol.md
+12-documentation-standards.md
+13-ide-environment-setup.md
+14-project-templates.md
+15-agentic-framework-evaluation.md
+appendix-a-technology-matrix.md
+README.md
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="00-preamble.md">
+# 0. Document Preamble
+
+**Source:** Universal-AGENTS.md lines 1-53  
+**Version:** 1.0.0  
+**Last Updated:** 2026-01-02
+
+---
+
+## Contents
+
+- [Purpose](#purpose)
+- [Scope](#scope)
+- [Deviation Protocol](#deviation-protocol)
+
+---
+
+## 0. Document Preamble
+
+### Purpose
+
+This document serves as the **single, authoritative source of truth** for all software development work across any project, stack, or domain. It establishes universal principles, mandatory workflows, agent interaction protocols, and quality standards that ensure consistency, maintainability, and excellence.
+
+### Scope
+
+**Universal Application:**
+
+- Applies to all development work: frontend, backend, AI/ML, infrastructure
+- Covers manual development, AI-assisted development, and autonomous agent workflows
+- Valid across all technology stacks and project types
+
+**Enforcement Levels:**
+
+Following RFC 2119 standard:
+
+- **MUST** (ENFORCED) - Violation blocks work; no exceptions without explicit ADR
+- **SHOULD** (RECOMMENDED) - Strong preference; deviation requires justification
+- **MAY** (OPTIONAL) - Available option; no justification needed
+
+### Deviation Protocol
+
+Deviations from this document MUST be:
+
+1. **Documented** in the project's `decisions.md` file as an ADR (Architectural Decision Record)
+2. **Justified** with clear rationale (technical constraints, business requirements, etc.)
+3. **Reviewed** by technical leadership or project stakeholders
+4. **Temporary** when possible, with a plan to return to compliance
+
+**ADR Format:**
+
+```markdown
+## ADR-XXX: [Title]
+
+**Date:** YYYY-MM-DD
+**Status:** Accepted | Superseded
+**Context:** Why this deviation is necessary
+**Decision:** What rule is being deviated from and how
+**Consequences:** Impact and mitigation plan
+```
+
+---
+
+## Navigation
+
+| Previous | Up                   | Next                                                       |
+| -------- | -------------------- | ---------------------------------------------------------- |
+| —        | [Index](./README.md) | [Foundational Principles](./01-foundational-principles.md) |
+
+---
+
+**Cross-References:**
+
+- See [ADR Format](./12-documentation-standards.md#122-adr-format-architectural-decision-records) for detailed ADR template
+</file>
+
+<file path="01-foundational-principles.md">
+# 1. Foundational Principles
+
+**Source:** Universal-AGENTS.md lines 153-343  
+**Version:** 1.0.0  
+**Last Updated:** 2026-01-02
+
+---
+
+## Contents
+
+- [1.1 The Architecture Pillars ("-ilities")](#11-the-architecture-pillars--ilities)
+  - [Modularity](#modularity)
+  - [Scalability](#scalability)
+  - [Performance](#performance)
+  - [Resiliency](#resiliency)
+  - [Security](#security)
+  - [Maintainability](#maintainability)
+  - [Observability](#observability)
+- [1.2 API-First Design](#12-api-first-design)
+- [1.3 Clean Architecture](#13-clean-architecture)
+- [1.4 Determinism & Reproducibility](#14-determinism--reproducibility)
+
+---
+
+## 1. Foundational Principles
+
+### 1.1 The Architecture Pillars ("-ilities")
+
+All software MUST be designed with these seven architectural qualities:
+
+#### Modularity
+
+**Definition:** Systems MUST be composed of loosely coupled, highly cohesive components with well-defined interfaces.
+
+**Requirements:**
+
+- Components interact through explicit contracts (APIs, events, messages)
+- Internal implementation details MUST NOT leak across module boundaries
+- Dependencies flow inward (domain-driven design)
+
+**Example:** A `UserService` MUST NOT directly access database tables; it interacts through a `UserRepository` interface.
+
+---
+
+#### Scalability
+
+**Definition:** Systems MUST handle growth in users, data, and load without architectural redesign.
+
+**Requirements:**
+
+- Horizontal scaling MUST be preferred over vertical scaling
+- Stateless components SHOULD be default; stateful components require justification
+- Database queries MUST use indexes for performance-critical paths
+
+**Targets:**
+
+- 10x user growth without code changes
+- Sub-linear cost growth relative to usage
+
+---
+
+#### Performance
+
+**Definition:** Systems MUST meet explicit latency and throughput targets.
+
+**Requirements:**
+
+- API p95 latency SHOULD be <200ms for critical paths
+- Database queries MUST complete in <100ms for 95th percentile
+- Page load (LCP) SHOULD be <2.5s at p75
+
+**Measurement:** Performance budgets MUST be enforced in CI/CD.
+
+---
+
+#### Resiliency
+
+**Definition:** Systems MUST gracefully handle failures and recover automatically.
+
+**Requirements:**
+
+- Services MUST implement circuit breakers for external dependencies
+- Retries MUST use exponential backoff with jitter
+- Failures MUST be isolated (bulkheads) to prevent cascading failures
+
+**Patterns:**
+
+- Timeout on all I/O operations (default: 30s)
+- Fallback behaviors for degraded modes
+- Health checks for liveness and readiness
+
+---
+
+#### Security
+
+**Definition:** Systems MUST protect data and prevent unauthorized access.
+
+**Requirements:**
+
+- Authentication MUST use industry-standard protocols (OAuth2, JWT)
+- Secrets MUST NEVER be committed to version control
+- Inputs MUST be validated and sanitized
+- HTTPS/TLS MUST be enforced for all external communication
+
+**Practices:**
+
+- Principle of least privilege for all access control
+- Security reviews for high-risk changes
+- Dependency vulnerability scanning in CI/CD
+
+---
+
+#### Maintainability
+
+**Definition:** Code MUST be readable, testable, and modifiable by future developers.
+
+**Requirements:**
+
+- Code coverage MUST be ≥80% for critical business logic
+- Functions SHOULD be <50 lines; classes <300 lines
+- Naming MUST be descriptive (no single-letter variables except loop counters)
+
+**Documentation:**
+
+- Public APIs MUST have docstrings with examples
+- Complex algorithms MUST include inline comments explaining "why"
+- ADRs MUST document significant architectural decisions
+
+---
+
+#### Observability
+
+**Definition:** Systems MUST provide visibility into runtime behavior for debugging and monitoring.
+
+**Requirements:**
+
+- Structured logging MUST be used (JSON format)
+- Logs MUST include: timestamp, level, service, request_id, message
+- Metrics MUST track golden signals: latency, traffic, errors, saturation
+- Distributed tracing SHOULD be implemented for microservices
+
+**Standards:**
+
+- Log levels: DEBUG, INFO, WARN, ERROR, CRITICAL
+- No PII in logs unless encrypted
+- Alerts tied to SLOs, not arbitrary thresholds
+
+---
+
+### 1.2 API-First Design
+
+**Mandate:** APIs MUST be designed before implementation.
+
+**Process:**
+
+1. **Spec First:** Write OpenAPI 3.x or GraphQL SDL before coding
+2. **Contract Tests:** Validate implementation against spec
+3. **Versioning:** All APIs MUST use semantic versioning
+4. **Backwards Compatibility:** Breaking changes require major version bump
+
+**Benefits:**
+
+- Frontend and backend teams work in parallel
+- Contract tests prevent regressions
+- Auto-generated documentation always in sync
+
+---
+
+### 1.3 Clean Architecture
+
+**Mandate:** Code MUST follow the Dependency Rule: dependencies flow inward only.
+
+**Layers (inside-out):**
+
+```
+┌─────────────────────────────────────────┐
+│     Frameworks / Web / UI / External    │  ← Outer layer
+├─────────────────────────────────────────┤
+│       Adapters / Controllers / APIs     │
+├──────────────────────────────────────────┤
+│     Application / Use Cases / Services  │
+├─────────────────────────────────────────┤
+│      Domain / Entities / Business Logic │  ← Inner layer (pure)
+└─────────────────────────────────────────┘
+```
+
+**Rules:**
+
+- **Domain layer:** Pure business logic; zero framework dependencies
+- **Application layer:** Orchestrates domain objects and repositories
+- **Infrastructure layer:** Technical implementations (DB, external APIs)
+- **Adapters:** Convert between formats (HTTP → DTOs → Domain)
+
+**Benefit:** Business logic is testable without databases, frameworks, or external services.
+
+---
+
+### 1.4 Determinism & Reproducibility
+
+**Mandate:** Builds MUST be reproducible; environments MUST be consistent.
+
+**Requirements:**
+
+- **Lock files:** `package-lock.json`, `poetry.lock`, `go.sum` MUST be version-controlled
+- **Container images:** Pin base image versions (e.g., `node:20.10-alpine`, not `node:latest`)
+- **Environment parity:** Dev, staging, and production MUST use identical toolchains
+- **Random seeds:** Tests with randomness MUST use fixed seeds
+
+**Tools:**
+
+- Docker for local development (isolates dependencies)
+- CI/CD runs in containers with pinned versions
+- Infrastructure-as-code (Terraform, K8s manifests) version-controlled
+
+---
+
+## Navigation
+
+| Previous                     | Up                   | Next                                                   |
+| ---------------------------- | -------------------- | ------------------------------------------------------ |
+| [Preamble](./00-preamble.md) | [Index](./README.md) | [Development Lifecycle](./02-development-lifecycle.md) |
+</file>
+
+<file path="02-development-lifecycle.md">
+# 2. Development Lifecycle
+
+**Source:** Universal-AGENTS.md lines 347-607  
+**Version:** 1.0.0  
+**Last Updated:** 2026-01-02
+
+---
+
+## Contents
+
+- [2.1 Spec-Driven Development (SDD)](#21-spec-driven-development-sdd)
+- [2.2 Test-Driven Development (TDD)](#22-test-driven-development-tdd)
+- [2.3 Test Pyramid](#23-test-pyramid)
+- [2.4 When TDD Is Hard](#24-when-tdd-is-hard)
+- [2.5 Combined SDD + TDD Example](#25-combined-sdd--tdd-example)
+
+---
+
+## 2. Development Lifecycle
+
+### 2.1 Spec-Driven Development (SDD)
+
+**Mandate:** Specifications MUST precede implementation.
+
+**The 5-Phase SDD Framework:**
+
+#### Phase 0: Intake & Refinement
+
+1. **GitHub Issue Required:** Every change MUST originate from a tracked issue
+2. **Clarify Requirements:** Engage stakeholders to define success criteria
+3. **Write Minimal PRD:**
+   - Problem statement with current vs. desired state
+   - User stories: "As a `<role>`, I want `<capability>` so that `<benefit>`"
+   - Acceptance criteria: "WHEN `<condition>`, THEN system SHALL `<behavior>`"
+   - Edge cases and error scenarios explicitly listed
+
+#### Phase 1: Design & Specify
+
+1. **Create Specification Document** (`docs/requirements.md`):
+   - Functional Requirements (FR-001, FR-002, ...) with traceability to user stories
+   - Non-functional Requirements (latency targets, throughput, availability SLOs)
+   - API Contract (OpenAPI 3.x for REST, GraphQL SDL for GraphQL)
+   - Data Model (entities, relationships, constraints, indexes)
+   - Assumptions, dependencies, and open questions
+
+2. **Stakeholder Review:** Document decisions in `decisions.md` as ADRs
+
+3. **Version Specs with Code:**
+   ```
+   docs/
+   ├── requirements.md         # PRD / FR list
+   ├── api-spec.openapi.yaml   # API contract (source of truth)
+   ├── data-model.md           # Entity/schema definitions
+   ├── decisions.md            # ADRs (numbered: ADR-001, ADR-002, ...)
+   └── architecture.md         # High-level design diagrams/text
+   ```
+
+#### Phase 2: Planning
+
+1. **Create Implementation Plan** (`docs/plan.md`):
+   - Break requirements into testable tasks (1-4 hours each)
+   - Group into logical phases (Core Domain → Application → API → UI)
+   - Link each task to specific FRs
+   - Identify dependencies and risks
+
+2. **Create Test Specifications:**
+   - Map test cases 1:1 to FRs (TEST-001 → FR-001)
+   - Define expected inputs, outputs, and edge cases
+
+#### Phase 3: Implementation (TDD-First)
+
+See Section 2.2 for TDD cycle details.
+
+#### Phase 4: Integration & Validation
+
+1. **CI/CD Pipeline** (immutable order): Lint → Test → Build → Deploy
+2. **Update Spec** when implementation reveals gaps or new edge cases
+3. **Write ADRs** for any deviations from plan
+
+#### Phase 5: Documentation & Release
+
+1. **README.md** reflects current usage and setup
+2. **API Documentation** auto-generated from spec
+3. **CHANGELOG.md** documents user-facing changes
+4. **Update `decisions.md`** with any new ADRs
+
+**Why SDD First?**
+
+- Surfaces assumptions before coding (prevents "I thought you meant X")
+- Specs enable parallel work (frontend mocks from API spec, DB schema from data model)
+- Contract becomes shared truth across teams
+- Reduces rework (contract locked early)
+
+---
+
+### 2.2 Test-Driven Development (TDD)
+
+**Mandate:** Tests MUST be written before implementation code.
+
+**The Red-Green-Refactor Cycle:**
+
+```
+┌─────────────────────────────────────┐
+│  1. RED: Write failing test         │
+├─────────────────────────────────────┤
+│  2. GREEN: Minimal code to pass     │
+├─────────────────────────────────────┤
+│  3. REFACTOR: Improve without       │
+│     changing behavior                │
+└─────────────────────────────────────┘
+```
+
+#### Step 1: RED - Write Failing Test
+
+- **Focus on behavior, not implementation**
+- Use domain language (business terms)
+- Example:
+  ```python
+  def test_transfer_deducts_from_source_account():
+      source = Account(balance=100)
+      destination = Account(balance=50)
+      source.transfer(destination, amount=30)
+      assert source.balance == 70
+      assert destination.balance == 80
+  ```
+
+#### Step 2: GREEN - Make It Pass
+
+- **Write minimal code** to satisfy the test
+- Don't over-engineer yet
+- Example:
+
+  ```python
+  class Account:
+      def __init__(self, balance: int):
+          self.balance = balance
+
+      def transfer(self, dest: 'Account', amount: int):
+          self.balance -= amount
+          dest.balance += amount
+  ```
+
+#### Step 3: REFACTOR - Improve Code
+
+- Extract functions, improve naming, add validation
+- All tests MUST still pass
+- Example: Add guards, type hints, error handling
+
+#### Step 4: REPEAT for Next Behavior
+
+---
+
+### 2.3 Test Pyramid
+
+**Distribution targets:**
+
+```
+         ▲ E2E (10-15%)
+        /│\
+       / │ \
+      /  │  \ Integration (20-30%)
+     /   │   \
+    /_________\ Unit (60-70%)
+```
+
+**Layer Characteristics:**
+
+| Layer           | Speed  | Isolation | Scope                 | Example                             |
+| --------------- | ------ | --------- | --------------------- | ----------------------------------- |
+| **Unit**        | <1ms   | High      | Single function/class | `test_password_validation()`        |
+| **Integration** | <100ms | Medium    | Multiple layers       | `test_api_saves_to_database()`      |
+| **E2E**         | <5s    | Low       | Full user flow        | `test_user_registration_workflow()` |
+
+---
+
+### 2.4 When TDD Is Hard
+
+**UI Components:**
+
+- Extract logic into testable functions
+- Test state changes, not DOM rendering
+- Use component testing libraries (Testing Library, Cypress CT)
+
+**Database Operations:**
+
+- Use in-memory adapters for unit tests (SQLite `:memory:`)
+- Use real DB for integration tests with transaction rollback
+
+**External APIs:**
+
+- Mock with stubs/fakes in unit tests
+- Record real responses for regression tests (VCR cassettes)
+
+**Asynchronous Code:**
+
+- Use async/await patterns
+- Test with deterministic timers (Jest fake timers, pytest-asyncio)
+
+---
+
+### 2.5 Combined SDD + TDD Example
+
+**Feature:** User Registration
+
+**Step 1: Write Spec** (docs/requirements.md)
+
+```markdown
+## FR-001: Register with Email & Password
+
+As a new user, I want to register so I can access the platform.
+
+### Acceptance Criteria
+
+- WHEN user submits email + password via POST /api/v1/auth/register
+- THEN system SHALL validate email format
+- AND system SHALL validate password (min 8 chars, 1 uppercase, 1 number)
+- AND system SHALL hash password with bcrypt (12 rounds)
+- AND system SHALL store user in database
+- AND system SHALL return 201 Created with user ID
+
+## FR-002: Prevent Duplicate Registrations
+
+- WHEN email already exists
+- THEN system SHALL return 409 Conflict "Email already registered"
+```
+
+**Step 2: Write Plan** (docs/plan.md)
+
+```markdown
+## Phase 1: Domain Layer
+
+- [ ] Create User entity with validation
+- [ ] Add password hashing logic
+
+## Phase 2: Application Layer
+
+- [ ] Create RegisterUserUseCase
+
+## Phase 3: API Layer
+
+- [ ] Add POST /api/v1/auth/register endpoint
+```
+
+**Step 3: Write Failing Tests**
+
+```python
+# TEST-001: Domain validation
+def test_reject_weak_password():
+    with pytest.raises(ValueError, match="at least 8"):
+        User.create(email="alice@example.com", password="weak")
+
+# TEST-002: Use case
+def test_register_user_successfully(db):
+    use_case = RegisterUserUseCase(UserRepository(db))
+    user = use_case.execute("bob@example.com", "SecurePass123")
+    assert user.id is not None
+
+# TEST-003: API contract
+def test_register_endpoint_returns_201(client):
+    response = client.post("/api/v1/auth/register", json={
+        "email": "dave@example.com", "password": "SecurePass123"
+    })
+    assert response.status_code == 201
+```
+
+**Step 4: Implement** (Green phase)
+
+```python
+class User:
+    @staticmethod
+    def create(email: str, password: str) -> 'User':
+        if len(password) < 8 or not re.search(r'[A-Z]', password):
+            raise ValueError("Password must be at least 8 chars with 1 uppercase")
+        hashed = bcrypt.hashpw(password.encode(), bcrypt.gensalt(12))
+        return User(email, hashed.decode())
+```
+
+---
+
+## Navigation
+
+| Previous                                                   | Up                   | Next                                                             |
+| ---------------------------------------------------------- | -------------------- | ---------------------------------------------------------------- |
+| [Foundational Principles](./01-foundational-principles.md) | [Index](./README.md) | [Agent Interaction Protocol](./03-agent-interaction-protocol.md) |
+</file>
+
+<file path="03-agent-interaction-protocol.md">
+# 3. Agent Interaction Protocol
+
+**Source:** Universal-AGENTS.md lines 610-713  
+**Version:** 1.0.0  
+**Last Updated:** 2026-01-02
+
+---
+
+## Contents
+
+- [3.1 Guided Execution](#31-guided-execution)
+- [3.2 Explicit Approval Requirements](#32-explicit-approval-requirements)
+- [3.3 ECoR-V Communication Format](#33-ecor-v-communication-format)
+- [3.4 Feedback Request Format](#34-feedback-request-format)
+
+---
+
+## 3. Agent Interaction Protocol
+
+### 3.1 Guided Execution
+
+**Mandate:** AI agents MUST present commands for review before execution.
+
+**Process:**
+
+1. **Command Proposal:** Agent presents command with:
+   - Command text
+   - Purpose and rationale
+   - Expected outcome
+   - Risk assessment
+
+2. **User Approval:** Agent MUST wait for explicit "yes" before executing
+
+3. **Safe Auto-Run:**  
+   Read-only commands (view, list, search) MAY be auto-run IF marked `SafeToAuto Run: true`
+
+**Example:**
+
+```
+Agent: I'll run `npm test` to verify changes.
+[Waits for user approval]
+User: yes
+Agent: [Executes command]
+```
+
+---
+
+### 3.2 Explicit Approval Requirements
+
+**Commands Requiring Approval:**
+
+- **MUST approve:** Any command that modifies state (write, delete, execute, install, deploy)
+- **SHOULD approve:** Commands with external side effects (API calls, network requests)
+- **MAY auto-run:** Read-only operations (ls, cat, stat, grep)
+
+**Batch Approval:**
+
+- Up to **10 read-only commands** in a single approval
+- Maximum **30 seconds** duration per batch
+- Any write command immediately terminates batch
+
+---
+
+### 3.3 ECoR-V Communication Format
+
+**Mandate:** For non-trivial tasks, agents SHOULD use Enhanced Chain of Reasoning with Validation (ECoR-V).
+
+**ECoR-V Block Template:**
+
+```markdown
+**ECoR-V Status:**
+
+- 🗺️ **Plan:** [High-level approach]
+- 🚦 **Prerequisites:** [Required context or dependencies]
+- 👍 **Success Criteria:** [How to verify completion]
+- 🔧 **Tools & Validation:** [Commands/tools to use]
+- 🧭 **Execution Steps:** [Sequential steps]
+- 🧠 **Key Considerations:** [Risks, edge cases, trade-offs]
+- 🗣 **Communication Strategy:** [How/when to update user]
+- ✅ **Validation Outcome:** [Results after execution]
+```
+
+**When to Use:**
+
+- Complex multi-file changes
+- New feature implementation
+- Architectural decisions
+- Debugging non-trivial issues
+
+**When to Skip:**
+
+- Simple file edits
+- One-liner fixes
+- Answering questions
+
+---
+
+### 3.4 Feedback Request Format
+
+**Mandate:** After significant work, agents SHOULD solicit structured feedback.
+
+**3-Question Framework:**
+
+```markdown
+---
+To refine this or plan next steps:
+🔍 **Investigation:** [Specific clarification question]
+🔭 **Exploration:** [Question about related alternatives]
+🎯 **Action/Exploitation:** [Prompt for concrete next step]
+---
+```
+
+**Examples:**
+
+| Type                   | Example                                                      |
+| ---------------------- | ------------------------------------------------------------ |
+| 🔍 Investigation       | "Does the login flow handle expired tokens as expected?"     |
+| 🔭 Exploration         | "Should we also implement password reset in this iteration?" |
+| 🎯 Action/Exploitation | "Shall I write integration tests for this endpoint now?"     |
+
+---
+
+## Navigation
+
+| Previous                                               | Up                   | Next                                                       |
+| ------------------------------------------------------ | -------------------- | ---------------------------------------------------------- |
+| [Development Lifecycle](./02-development-lifecycle.md) | [Index](./README.md) | [File Modification Rules](./04-file-modification-rules.md) |
+</file>
+
+<file path="04-file-modification-rules.md">
+# 4. File Modification Rules
+
+**Source:** Universal-AGENTS.md lines 715-800  
+**Version:** 1.0.0  
+**Last Updated:** 2026-01-02
+
+---
+
+## Contents
+
+- [4.1 Surgical by Default (ENFORCED)](#41-surgical-by-default-enforced)
+- [4.2 Patch Size Guardrails (HARD LIMITS)](#42-patch-size-guardrails-hard-limits)
+- [4.3 Fallback Conditions](#43-fallback-conditions)
+- [4.4 Diff-Before-Write Validation](#44-diff-before-write-validation)
+- [4.5 Idempotence & Safety Protocols](#45-idempotence--safety-protocols)
+- [4.6 Change Isolation Principle](#46-change-isolation-principle)
+
+---
+
+## 4. File Modification Rules
+
+### 4.1 Surgical by Default (ENFORCED)
+
+**Primary Rule:** NEVER rewrite entire files for small changes.
+
+**Tool Hierarchy (in order of preference):**
+
+1. **`replace` / `edit_block`** — Pinpoint edits with 1-3 lines context ✓ FIRST CHOICE
+2. **`write_file` (append)** — Only for adding new content
+3. \*\*`write_file` (overwrite)` — STRICTLY PROHIBITED except:
+   - New file creation
+   - Refactoring >30% of file (explicit task)
+   - File corruption recovery (user approval)
+
+---
+
+### 4.2 Patch Size Guardrails (HARD LIMITS)
+
+| Threshold                  | Limit                    | Action                                      |
+| -------------------------- | ------------------------ | ------------------------------------------- |
+| **Per-Write Limit**        | 30 lines                 | Maximum per operation                       |
+| **Confirmation Threshold** | 50 lines OR 10% of file  | Pause, present diff, request approval       |
+| **Emergency Stop**         | 200 lines OR 20% of file | HALT, require explicit approval + rationale |
+
+---
+
+### 4.3 Fallback Conditions
+
+**When `replace` Fails:**
+
+1. Retry with expanded context (up to 5 lines)
+2. If still fails, request user guidance
+3. Only escalate to append/overwrite with explicit approval
+
+**Documentation:** Log all fallbacks with timestamps and reasons
+
+---
+
+### 4.4 Diff-Before-Write Validation
+
+**Pre-Write Checks:**
+
+- Compute intended diff from cached content
+- Skip no-op writes (zero changes detected)
+- Validate patch applicability
+
+**Post-Write Verification:**
+
+- Re-read file to confirm changes
+- Byte-level comparison of intended vs. actual
+- Report any discrepancies immediately
+
+---
+
+### 4.5 Idempotence & Safety Protocols
+
+**Atomic Writes:**
+
+- Create backup before modification: `cp file file.backup`
+- Use atomic write operations when possible
+- Verify written content matches intent
+
+**Integrity Checks:**
+
+- Re-read file post-write
+- Confirm exact changes applied
+- Validate file still parses/compiles if applicable
+
+---
+
+### 4.6 Change Isolation Principle
+
+**MUST:**
+
+- Focus exclusively on requested change
+- Preserve existing formatting and style
+- Maintain file encoding and line endings
+
+**MUST NOT:**
+
+- Alter unrelated whitespace or formatting
+- Reorder code sections unless requested
+- Change indentation style arbitrarily
+
+---
+
+## Navigation
+
+| Previous                                                         | Up                   | Next                                                |
+| ---------------------------------------------------------------- | -------------------- | --------------------------------------------------- |
+| [Agent Interaction Protocol](./03-agent-interaction-protocol.md) | [Index](./README.md) | [Read/Search Efficiency](./05-search-efficiency.md) |
+</file>
+
+<file path="05-search-efficiency.md">
+# 5. Read/Search Efficiency
+
+**Source:** Universal-AGENTS.md lines 802-897  
+**Version:** 1.0.0  
+**Last Updated:** 2026-01-02
+
+---
+
+## Contents
+
+- [5.1 Safe Autonomy Mode (ENFORCED)](#51-safe-autonomy-mode-enforced)
+- [5.2 Smart Caching (ENFORCED)](#52-smart-caching-enforced)
+- [5.3 Focused Search Strategy (ENFORCED)](#53-focused-search-strategy-enforced)
+- [5.4 Token & Time Budgets (ENFORCED)](#54-token--time-budgets-enforced)
+
+---
+
+## 5. Read/Search Efficiency
+
+### 5.1 Safe Autonomy Mode (ENFORCED)
+
+**Batch Read Operations:**
+
+- Up to **10 read-only commands** per approval
+- Maximum **30 seconds** duration
+- Terminates on ANY write/execute command
+
+**Allowed Commands:**
+
+- `list_directory`, `read_file`, `search_files`
+- `view_code_item`, `grep_search`
+- `stat`, `ls`, `cat` (terminal)
+
+**Batch Plan Required:**
+
+- Present complete plan before execution
+- User approves entire batch, not individual commands
+- Partial failures require restart
+
+---
+
+### 5.2 Smart Caching (ENFORCED)
+
+**Session Cache Rules:**
+
+- Cache file contents after first read
+- Re-read ONLY if:
+  - File size, mtime, or hash changes
+  - Agent writes to file (invalidates cache)
+  - Explicit refresh requested with justification
+
+**Cache Validation:**
+
+```bash
+# Check if file changed
+stat -c %s:%Y:%Z <filename>
+# Compare with cached metadata
+```
+
+**Cache Limits:**
+
+- Maximum **50 files** cached per session
+- LRU eviction policy
+- Report cache hit rate in summaries
+
+---
+
+### 5.3 Focused Search Strategy (ENFORCED)
+
+**Scope First Principle:**
+
+1. **Infer likely directories** from project structure
+2. **Start specific:** `src/`, `tests/`, `docs/` based on task
+3. **Widen gradually:** Only after local misses, with justification
+
+**Search Filters:**
+
+- Use specific patterns and file extensions
+- Cap results at **100 matches** (default)
+- Exceeding requires user approval + rationale
+
+**Tool Selection:**
+
+- PREFER fast, filtered searches (`grep_search` with `Includes`)
+- Use broad searches only when necessary
+- Document reason for wide searches
+
+---
+
+### 5.4 Token & Time Budgets (ENFORCED)
+
+**Default Budgets (HARD LIMITS):**
+
+| Resource                      | Limit                     | Override                       |
+| ----------------------------- | ------------------------- | ------------------------------ |
+| **Project-wide searches**     | ≤2 per task               | User approval required         |
+| **File re-reads (same file)** | ≤3 per task (0 if cached) | Cache invalidation or approval |
+| **Search results inspected**  | ≤200 per task             | User approval + rationale      |
+| **Autonomous batch duration** | ≤30 seconds               | Break into smaller batches     |
+
+**Exceeding Protocol:**
+
+1. Present explicit rationale
+2. Require user approval
+3. Log exception with timestamp/reason
+
+**Efficiency Metrics:**
+
+- Track token usage per operation
+- Monitor search/read/execution times
+- Aim for >80% cache hit rate
+- Report metrics in session summaries
+
+---
+
+## Navigation
+
+| Previous                                                   | Up                   | Next                                                 |
+| ---------------------------------------------------------- | -------------------- | ---------------------------------------------------- |
+| [File Modification Rules](./04-file-modification-rules.md) | [Index](./README.md) | [Code Style Standards](./06-code-style-standards.md) |
+</file>
+
+<file path="06-code-style-standards.md">
+# 6. Code Style Standards
+
+**Source:** Universal-AGENTS.md lines 900-1127  
+**Version:** 1.0.0  
+**Last Updated:** 2026-01-02
+
+---
+
+## Contents
+
+- [6.1 Python (PEP 8 Extended)](#61-python-pep-8-extended)
+- [6.2 JavaScript / TypeScript](#62-javascript--typescript)
+- [6.3 React Component Patterns (Atomic Design)](#63-react-component-patterns-atomic-design)
+- [6.4 Tailwind CSS Formatting](#64-tailwind-css-formatting)
+
+---
+
+## 6. Code Style Standards
+
+### 6.1 Python (PEP 8 Extended)
+
+**Tool Chain:**
+
+- **Linter:** `ruff` (fast, comprehensive)
+- **Formatter:** `black` or `ruff format`
+- **Type Checker:** `mypy` (strict mode)
+
+**Style Rules:**
+
+| Rule            | Standard                                                                                         |
+| --------------- | ------------------------------------------------------------------------------------------------ |
+| **Line Length** | 88 characters (Black default)                                                                    |
+| **Indentation** | 4 spaces                                                                                         |
+| **Naming**      | `snake_case` for functions/variables, `PascalCase` for classes, `UPPER_SNAKE_CASE` for constants |
+| **Strings**     | Double quotes; f-strings for interpolation                                                       |
+| **Docstrings**  | Google-style for all public modules/classes/functions                                            |
+| **Type Hints**  | Mandatory on all function signatures                                                             |
+
+**Example:**
+
+```python
+"""Module for managing user accounts.
+
+This module provides user creation, authentication, and profile management.
+"""
+
+from typing import Optional
+
+MAX_LOGIN_ATTEMPTS = 5
+
+class UserManager:
+    """Manages user accounts and authentication.
+
+    Attributes:
+        db: Database connection instance.
+    """
+
+    def __init__(self, db):
+        """Initialize UserManager.
+
+        Args:
+            db: Database connection.
+        """
+        self.db = db
+
+    def register_user(self, email: str, password: str) -> dict:
+        """Register a new user with email and password.
+
+        Args:
+            email: User's email address.
+            password: User's password (min 8 chars, uppercase + number required).
+
+        Returns:
+            Dictionary with user ID and email.
+
+        Raises:
+            ValueError: If email format invalid or password weak.
+            DuplicateEmailError: If email already exists.
+        """
+        if not self._validate_email(email):
+            raise ValueError(f"Invalid email: {email}")
+        if not self._validate_password(password):
+            raise ValueError("Password too weak")
+
+        user = User.create(email, password)
+        self.db.save(user)
+        return {"id": user.id, "email": user.email}
+```
+
+**Configuration (pyproject.toml):**
+
+```toml
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+disallow_untyped_defs = true
+```
+
+---
+
+### 6.2 JavaScript / TypeScript
+
+**Tool Chain:**
+
+- **Linter:** ESLint with TypeScript support
+- **Formatter:** Prettier
+- **Type Checker:** TypeScript (strict mode)
+
+**Style Rules:**
+
+| Rule            | Standard                                                                                                   |
+| --------------- | ---------------------------------------------------------------------------------------------------------- |
+| **Line Length** | 80 characters                                                                                              |
+| **Indentation** | 2 spaces                                                                                                   |
+| **Naming**      | `camelCase` for variables/functions, `PascalCase` for components/classes, `UPPER_SNAKE_CASE` for constants |
+| **Strings**     | Single quotes; template literals for interpolation                                                         |
+| **Imports**     | React → External libs → Internal modules                                                                   |
+| **Components**  | Functional with hooks; default export only for routes                                                      |
+| **JSDoc**       | Mandatory for exported functions/components                                                                |
+
+**Example (React Component):**
+
+```typescript
+import React, { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { UserService } from '@/services/user';
+
+const MAX_USERNAME_LENGTH = 50;
+
+interface UserProfile {
+  id: string;
+  name: string;
+  email: string;
+}
+
+/**
+ * UserCard component displays user information and allows editing.
+ *
+ * @param userId - The ID of the user to display
+ * @param onUpdate - Callback when user is updated
+ * @returns Rendered user card component
+ */
+export function UserCard({
+  userId,
+  onUpdate,
+}: {
+  userId: string;
+  onUpdate: (user: UserProfile) => void;
+}): React.ReactElement {
+  const [user, setUser] = useState<UserProfile | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const data = await UserService.getUser(userId);
+        setUser(data);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, [userId]);
+
+  if (isLoading) return <div>Loading...</div>;
+  if (!user) return <div>User not found</div>;
+
+  return (
+    <div className="p-4 border rounded-lg shadow">
+      <h2 className="text-lg font-bold">{user.name}</h2>
+      <p className="text-sm text-gray-600">{user.email}</p>
+    </div>
+  );
+}
+```
+
+---
+
+### 6.3 React Component Patterns (Atomic Design)
+
+**Hierarchy:**
+
+```
+components/
+├── ui/                    # Atoms (Button, Input, Label, Icon)
+├── composed/              # Molecules (SearchBar, Card, FormField)
+└── features/              # Organisms (UserProfile, AnalyticsDashboard)
+```
+
+**Rules:**
+
+- **Atoms:** Smallest reusable units; no business logic
+- **Molecules:** Combinations of atoms; minimal state
+- **Organisms:** Complex components with business logic
+- **No cross-feature imports:** Features MUST NOT import from other features
+
+**Example:**
+
+```typescript
+// ✅ GOOD: Feature imports only from ui/composed
+import { Button } from "@/components/ui/button";
+import { SearchBar } from "@/components/composed/search-bar";
+
+// ❌ BAD: Feature importing from another feature
+import { UserProfile } from "@/components/features/profile"; // FORBIDDEN
+```
+
+---
+
+### 6.4 Tailwind CSS Formatting
+
+**Rules:**
+
+- **Multi-line classes** for readability (>3 utilities)
+- **Order:** Auto-sorted by plugin (layout → spacing → typography → colors)
+- **Custom colors:** Via CSS variables, not hard-coded hex
+
+**Example:**
+
+```tsx
+// Multi-line for >3 utilities
+<button
+  className="
+    flex items-center justify-center
+    px-4 py-2
+    text-sm font-medium text-white
+    bg-blue-600 hover:bg-blue-700
+    rounded-lg shadow-md
+  "
+>
+  Click Me
+</button>
+
+// CSS variables for theming
+<button className="bg-[var(--primary)] text-white">
+  Themed Button
+</button>
+```
+
+---
+
+## Navigation
+
+| Previous | Up | Next |
+|----------|-----|------|
+| [Read/Search Efficiency](./05-search-efficiency.md) | [Index](./README.md) | [Tech Stack Reference](./07-tech-stack-reference.md) |
+</file>
+
+<file path="07-tech-stack-reference.md">
+# 7. Tech Stack Reference
+
+**Source:** Universal-AGENTS.md lines 1129-1263  
+**Version:** 1.0.0  
+**Last Updated:** 2026-01-02
+
+---
+
+## 7. Tech Stack Reference
+
+### 7.1 Stack Selection by Problem Type
+
+**Decision Tree:**
+
+```
+Problem Type
+├─ Web Application
+│  ├─ Interactive (SPA) → NextJS (React + SSR)
+│  ├─ Content-Heavy → Astro (Static + Islands)
+│  └─ Marketing Site → Astro
+├─ Mobile Application
+│  ├─ Cross-Platform → Flutter
+│  └─ Native → Swift (iOS) / Kotlin (Android)
+├─ Backend API
+│  ├─ Python Ecosystem → FastAPI
+│  ├─ JavaScript Ecosystem → NodeJS (Fastify)
+│  └─ Performance Critical → Go / Rust
+├─ AI/ML Service
+│  └─ Python → FastAPI + LangChain/LangGraph
+└─ CMS / Content Platform
+   └─ Headless CMS → Strapi 5
+```
+
+---
+
+### 7.2 Frontend Stacks
+
+#### NextJS (React Framework)
+
+**When:** Interactive web apps, SSR/SSG needed, type-safe full-stack
+
+**Features:**
+
+- File-based routing (`app/` directory)
+- Server Components + Client Components
+- Built-in API routes
+- Image optimization, font loading
+
+**Example Project Structure:**
+
+```
+my-app/
+├── app/
+│   ├── layout.tsx         # Root layout
+│   ├── page.tsx           # Home page
+│   └── api/               # API routes
+├── components/
+├── lib/
+└── public/
+```
+
+#### Astro (Static + Islands)
+
+**When:** Content sites, blogs, documentation, marketing
+
+**Features:**
+
+- Static-first with optional islands of interactivity
+- Framework-agnostic (React, Vue, Svelte in same project)
+- Content Collections (type-safe markdown)
+
+#### Flutter (Cross-Platform Mobile)
+
+**When:** iOS + Android + Desktop from single codebase
+
+**Features:**
+
+- Dart language
+- Direct-to-pixel rendering (Skia)
+- Hot reload
+- State management (Riverpod, BLoC)
+
+---
+
+### 7.3 Backend Stacks
+
+#### FastAPI (Python)
+
+**When:** APIs, AI/ML backends, data-heavy applications
+
+**Features:**
+
+- Async/await native
+- Auto-generated OpenAPI docs
+- Pydantic validation
+- High performance (<100ms typical)
+
+#### NodeJS (Fastify/Express)
+
+**When:** JavaScript full-stack, real-time apps, code sharing with frontend
+
+**Features:**
+
+- Non-blocking I/O
+- TypeScript support
+- Large ecosystem (npm)
+- WebSocket support (Socket.io)
+
+#### Strapi 5 (Headless CMS)
+
+**When:** Content modeling, multi-channel delivery, editor workflows
+
+**Features:**
+
+- Automatic REST + GraphQL
+- Plugin architecture
+- TypeScript codebase
+- Self-hosted or cloud
+
+---
+
+### 7.4 AI/ML Stack
+
+| Component       | Tool                        | Purpose              |
+| --------------- | --------------------------- | -------------------- |
+| **Framework**   | LangChain / LangGraph       | Agent orchestration  |
+| **Vector DB**   | Milvus / Qdrant             | Embedding storage    |
+| **LLM Runtime** | Ollama (local) / OpenAI API | Model inference      |
+| **Evaluation**  | LangSmith                   | Tracing & monitoring |
+
+---
+
+### 7.5 Infrastructure Stack
+
+| Component         | Tool                 | Purpose          |
+| ----------------- | -------------------- | ---------------- |
+| **Database**      | PostgreSQL           | Relational data  |
+| **Cache**         | Redis                | Session, results |
+| **Queue**         | Celery + Redis       | Async tasks      |
+| **Containers**    | Docker               | Isolation        |
+| **Orchestration** | Docker Compose / K8s | Multi-container  |
+| **CI/CD**         | GitHub Actions       | Automation       |
+
+---
+
+## Navigation
+
+| Previous | Up | Next |
+|----------|-----|------|
+| [06 Code Style Standards](./06-code-style-standards.md) | [Index](./README.md) | [08 Cicd Quality Gates](./08-cicd-quality-gates.md) |
+</file>
+
+<file path="08-cicd-quality-gates.md">
+# 8. CI/CD & Quality Gates
+
+**Source:** Universal-AGENTS.md lines 1266-1431  
+**Version:** 1.0.0  
+**Last Updated:** 2026-01-02
+
+---
+
+## 8. CI/CD & Quality Gates
+
+### 8.1 Immutable Pipeline Order (ENFORCED)
+
+**Sequence:** Lint → Test → Build → Deploy
+
+```
+┌─────────┐    ┌─────────┐    ┌─────────┐    ┌─────────┐
+│  LINT   │ → │  TEST   │ → │  BUILD  │ → │ DEPLOY  │
+└─────────┘    └─────────┘    └─────────┘    └─────────┘
+    ↓ FAIL        ↓ FAIL        ↓ FAIL        ↓ FAIL
+   STOP          STOP          STOP          ROLLBACK
+```
+
+**Rules:**
+
+- **No skipping stages:** All gates MUST pass in order
+- **Failure stops pipeline:** Any failure halts entire process
+- **No manual overrides:** Gates are automated and immutable
+
+---
+
+### 8.2 Stage Responsibilities
+
+#### Stage 1: Lint
+
+**Purpose:** Code style and syntax validation
+
+**Tools:**
+
+- Python: `ruff check .`
+- TypeScript: `eslint .`
+- Formatters: `black --check`, `prettier --check`
+
+**Exit Criteria:** Zero linting errors
+
+---
+
+#### Stage 2: Test
+
+**Purpose:** Functional correctness validation
+
+**Commands:**
+
+- Python: `pytest tests/ --cov=app --cov-report=xml`
+- TypeScript: `npm test -- --coverage`
+
+**Exit Criteria:**
+
+- All tests pass
+- Coverage thresholds met (≥80% for critical code)
+
+---
+
+#### Stage 3: Build
+
+**Purpose:** Compilation and artifact creation
+
+**Outputs:**
+
+- Docker image (tagged with commit SHA)
+- Build artifacts (dist/, wheels, binaries)
+
+**Exit Criteria:** Successful build with no errors
+
+---
+
+#### Stage 4: Deploy
+
+**Purpose:** Release to target environment
+
+**Strategies:**
+
+- **Blue/Green:** Zero-downtime switch
+- **Canary:** Gradual rollout (5% → 50% → 100%)
+- **Rolling:** Sequential instance updates
+
+**Exit Criteria:**
+
+- Health checks pass
+- Smoke tests pass
+- Rollback plan validated
+
+---
+
+### 8.3 GitHub Actions Template
+
+```yaml
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+      - run: pip install ruff
+      - run: ruff check .
+
+  test:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+      - run: pip install -r requirements-dev.txt
+      - run: pytest --cov=app --cov-report=xml
+      - uses: codecov/codecov-action@v3
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: docker/build-push-action@v4
+        with:
+          push: ${{ github.event_name == 'push' }}
+          tags: ${{ github.repository }}:${{ github.sha }}
+
+  deploy:
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Deploy to production"
+      - run: curl -f https://api.example.com/health || exit 1
+```
+
+---
+
+### 8.4 Quality Gate Failure Handling
+
+**On Lint Failure:**
+
+1. Pipeline stops immediately
+2. Developer notified with specific errors
+3. Fix required before re-running
+
+**On Test Failure:**
+
+1. Pipeline stops; build/deploy prevented
+2. Failed test details logged
+3. Coverage report generated
+4. Fix + re-test required
+
+**On Build Failure:**
+
+1. Deployment prevented
+2. Build logs preserved
+3. Rollback not needed (no deployment occurred)
+
+**On Deploy Failure:**
+
+1. Automatic rollback triggered
+2. Previous version restored
+3. Incident logged
+4. Post-mortem required
+
+---
+
+## Navigation
+
+| Previous | Up | Next |
+|----------|-----|------|
+| [07 Tech Stack Reference](./07-tech-stack-reference.md) | [Index](./README.md) | [09 Testing Strategy](./09-testing-strategy.md) |
+</file>
+
+<file path="09-testing-strategy.md">
+# 9. Testing Strategy
+
+**Source:** Universal-AGENTS.md lines 1434-1566  
+**Version:** 1.0.0  
+**Last Updated:** 2026-01-02
+
+---
+
+## 9. Testing Strategy
+
+### 9.1 Test Pyramid (Distribution Targets)
+
+```
+         ▲ E2E (10-15%)
+        /│\
+       / │ \
+      /  │  \ Integration (20-30%)
+     /   │   \
+    /_________\ Unit (60-70%)
+```
+
+**Rationale:** More unit tests = faster feedback, lower maintenance
+
+---
+
+### 9.2 Test Naming Conventions
+
+**Pattern:** `test_<what>_<condition>_<expected>`
+
+**Examples:**
+
+```python
+# ✅ GOOD
+def test_transfer_insufficient_balance_raises_error()
+def test_parse_date_invalid_format_returns_none()
+def test_calculate_discount_new_user_returns_15_percent()
+
+# ❌ BAD
+def test_transfer()  # What is being tested?
+def test_1()  # No semantic meaning
+```
+
+---
+
+### 9.3 Test Organization
+
+**By Feature/Layer:**
+
+```
+tests/
+├── unit/
+│   ├── domain/          # Business logic tests
+│   ├── services/        # Application layer tests
+│   └── utils/           # Helper function tests
+├── integration/
+│   ├── api/             # API endpoint tests
+│   ├── database/        # Repository/DB tests
+│   └── external/        # Third-party API tests
+└── e2e/
+    ├── auth_flow.spec.ts
+    └── checkout_flow.spec.ts
+```
+
+**Naming:** Match source structure (`user_service.py` → `test_user_service.py`)
+
+---
+
+### 9.4 Coverage Thresholds
+
+| Code Type                           | Minimum Coverage | Tool           |
+| ----------------------------------- | ---------------- | -------------- |
+| **Business Logic**                  | 100%             | Mandatory      |
+| **Critical Paths** (auth, payments) | 100%             | Mandatory      |
+| **Application Services**            | ≥80%             | Enforced in CI |
+| **API Endpoints**                   | ≥80%             | Enforced in CI |
+| **UI Components**                   | ≥60%             | Recommended    |
+| **Utils/Helpers**                   | ≥90%             | Recommended    |
+
+**Enforcement:** CI fails if critical/application coverage drops below threshold
+
+---
+
+### 9.5 When TDD Is Hard
+
+#### UI Components
+
+**Challenge:** Rendering behavior hard to test  
+**Solution:**
+
+- Extract logic into testable functions
+- Test state changes, not DOM
+- Use Testing Library (React) or Cypress Component Testing
+- Mock expensive operations (animations, network)
+
+**Example:**
+
+```typescript
+// ❌ Hard to test
+function UserCard({ userId }) {
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    fetch(`/api/users/${userId}`).then(r => r.json()).then(setUser);
+  }, [userId]);
+  return user ? <div>{user.name}</div> : <div>Loading...</div>;
+}
+
+// ✅ Testable
+function UserCard({ user, isLoading }) {
+  if (isLoading) return <div>Loading...</div>;
+  return <div>{user.name}</div>;
+}
+// Test hook separately with mock fetch
+```
+
+#### Database Operations
+
+**Challenge:** Test isolation and speed  
+**Solution:**
+
+- Use in-memory database (SQLite `:memory:`) for unit tests
+- Use real database with transaction rollback for integration tests
+- Seed fixtures deterministically
+
+#### External APIs
+
+**Challenge:** Non-deterministic, slow, rate-limited  
+**Solution:**
+
+- Mock with stubs/fakes in unit tests
+- Use VCR cassettes (record real responses) for regression tests
+- Test integration separately with dedicated test environment
+
+#### Asynchronous Code
+
+**Challenge:** Race conditions, timing issues  
+**Solution:**
+
+- Use async/await patterns consistently
+- Use fake timers (Jest, Sinon) for time-dependent code
+- Test with `waitFor` / `eventually` assertions
+
+---
+
+## Navigation
+
+| Previous | Up | Next |
+|----------|-----|------|
+| [08 Cicd Quality Gates](./08-cicd-quality-gates.md) | [Index](./README.md) | [10 Pr Commit Hygiene](./10-pr-commit-hygiene.md) |
+</file>
+
+<file path="10-pr-commit-hygiene.md">
+# 10. PR & Commit Hygiene
+
+**Source:** Universal-AGENTS.md lines 1569-1693  
+**Version:** 1.0.0  
+**Last Updated:** 2026-01-02
+
+---
+
+## 10. PR & Commit Hygiene
+
+### 10.1 Conventional Commits (ENFORCED)
+
+**Format:**
+
+```
+<type>(<scope>): <subject>
+
+[optional body]
+
+[optional footer]
+```
+
+**Types:**
+
+- `feat`: New feature (MINOR version bump)
+- `fix`: Bug fix (PATCH version bump)
+- `docs`: Documentation only
+- `style`: Formatting, no code change
+- `refactor`: Code restructure, no behavior change
+- `perf`: Performance improvement
+- `test`: Adding/updating tests
+- `chore`: Build, tooling, dependencies
+- `ci`: CI/CD changes
+
+**Examples:**
+
+```
+feat(auth): add OAuth2 Google login
+
+- Implement Google OAuth2 flow using passport-google-oauth20
+- Add /api/v1/auth/google/callback endpoint
+- Store access/refresh tokens in Redis with 1-hour TTL
+
+Closes #142
+[Test-Tier:2]
+```
+
+```
+fix(cart): prevent duplicate items on double-click
+
+Race condition allowed adding same item twice when user
+double-clicked Add to Cart button.
+
+Fixed by debouncing button clicks (300ms) and disabling
+button during API call.
+
+Fixes #287
+[Test-Tier:2]
+```
+
+---
+
+### 10.2 Test Tier Declaration (MANDATORY)
+
+**All commits MUST include:** `[Test-Tier:X]` where X ∈ {0, 1, 2, 3, 4}
+
+| Tier  | Definition                               | Example                      |
+| ----- | ---------------------------------------- | ---------------------------- |
+| **0** | No tests (docs, config, infra only)      | README update, Docker config |
+| **1** | Unit tests only (<10 tests, <100 LOC)    | Small utility function       |
+| **2** | Unit + integration tests                 | API endpoint with DB         |
+| **3** | Comprehensive (unit + integration + E2E) | User registration flow       |
+| **4** | Full suite + performance/security tests  | Payment processing           |
+
+**Enforcement:** Pre-commit hook validates `[Test-Tier:X]` presence
+
+---
+
+### 10.3 PR Template
+
+```markdown
+## Description
+
+[What changed and why]
+
+## Type of Change
+
+- [ ] Bug fix
+- [ ] New feature
+- [ ] Breaking change
+- [ ] Documentation
+
+## Affected Requirements
+
+- FR-XXX: [Requirement description]
+- FR-YYY: [Requirement description]
+
+## Test Strategy
+
+[Describe how changes were tested]
+
+- [ ] Unit tests added/updated
+- [ ] Integration tests added/updated
+- [ ] Manual testing performed
+
+**Test Tier:** X
+
+## Checklist
+
+- [ ] Code follows style guidelines
+- [ ] Self-review completed
+- [ ] Comments added for complex logic
+- [ ] Documentation updated
+- [ ] No new warnings introduced
+- [ ] Tests pass locally
+```
+
+---
+
+### 10.4 Large-Diff Gate Rules
+
+**Automatic Block Triggers:**
+
+- PR with >500 lines changed (excluding generated code)
+- PR touching >15 files
+- PR with >10 commits (should be broken down)
+
+**Review Requirements:**
+
+- **>200 lines:** Requires 2 approvals
+- **>500 lines:** Requires architecture review + 2 approvals
+- **>1000 lines:** MUST be split into multiple PRs
+
+---
+
+## Navigation
+
+| Previous | Up | Next |
+|----------|-----|------|
+| [09 Testing Strategy](./09-testing-strategy.md) | [Index](./README.md) | [11 Task Tracking Protocol](./11-task-tracking-protocol.md) |
+</file>
+
+<file path="11-task-tracking-protocol.md">
+# 11. Task Tracking Protocol
+
+**Source:** Universal-AGENTS.md lines 1696-1786  
+**Version:** 1.0.0  
+**Last Updated:** 2026-01-02
+
+---
+
+## 11. Task Tracking Protocol
+
+### 11.1 Status Legend
+
+| Symbol | Status    | Meaning                               |
+| ------ | --------- | ------------------------------------- |
+| ⌛     | Pending   | Not started; waiting for dependencies |
+| ▶️     | Current   | Active work in progress               |
+| ✅     | Completed | Done and verified                     |
+| ❌     | Canceled  | Abandoned or obsolete                 |
+
+---
+
+### 11.2 Initial Plan Generation Protocol
+
+**When:** At task start (before implementation)
+
+**Format:**
+
+```markdown
+# Task: [Feature Name]
+
+## Objective
+
+[Clear goal statement]
+
+## Tasks
+
+⌛ TASK-001: [First task description]
+⌛ TASK-002: [Second task description]
+⌛ TASK-003: [Third task description]
+
+## Dependencies
+
+- TASK-002 depends on TASK-001
+- TASK-003 blocked by external API approval
+
+## Estimates
+
+- Total: 8 hours
+- Breakdown: TASK-001 (3h), TASK-002 (3h), TASK-003 (2h)
+```
+
+---
+
+### 11.3 Maintenance Protocol
+
+**Update Rules:**
+
+1. **Start Work:** Change ⌛ to ▶️ when beginning task
+2. **Complete:** Change ▶️ to ✅ when task verified
+3. **Cancel:** Change any symbol to ❌ with justification
+4. **Block:** Add inline note: `⌛ TASK-004 (blocked by #142)`
+
+**Update Frequency:** After each task completion, not real-time
+
+---
+
+### 11.4 Dynamic Operations
+
+#### ADD Operation
+
+**Trigger:** New task discovered mid-execution  
+**Action:** Insert task with ⌛, update dependencies, adjust estimates
+
+**Example:**
+
+```markdown
+⌛ TASK-003.5: Add input validation (discovered during TASK-003)
+
+- Est: 1h
+- Depends on: TASK-003
+```
+
+#### CANCEL Operation
+
+**Trigger:** Task becomes obsolete or blocked permanently  
+**Action:** Mark ❌, document reason, update total estimate
+
+**Example:**
+
+```markdown
+❌ TASK-005: Implement Redis caching
+(Canceled: Product decided to defer caching to v2.0)
+```
+
+#### REPRIORITIZE Operation
+
+**Trigger:** Dependencies shift or urgency changes  
+**Action:** Reorder tasks, update numbers if needed, note reason
+
+---
+
+## Navigation
+
+| Previous | Up | Next |
+|----------|-----|------|
+| [10 Pr Commit Hygiene](./10-pr-commit-hygiene.md) | [Index](./README.md) | [12 Documentation Standards](./12-documentation-standards.md) |
+</file>
+
+<file path="12-documentation-standards.md">
+# 12. Documentation Standards
+
+**Source:** Universal-AGENTS.md lines 1789-1975  
+**Version:** 1.0.0  
+**Last Updated:** 2026-01-02
+
+---
+
+## 12. Documentation Standards
+
+### 12.1 README.md Requirements
+
+**Mandatory Sections:**
+
+```markdown
+# Project Name
+
+## Overview
+
+[One-paragraph description of what this does]
+
+## Prerequisites
+
+- Node.js ≥20.x
+- PostgreSQL ≥15.x
+- Redis ≥7.x
+
+## Quick Start
+
+\`\`\`bash
+
+# Install dependencies
+
+npm install
+
+# Set up environment
+
+cp .env.example .env
+
+# Run migrations
+
+npm run migrate
+
+# Start dev server
+
+npm run dev
+\`\`\`
+
+## Project Structure
+
+\`\`\`
+src/
+├── domain/ # Business logic
+├── application/ # Use cases
+├── api/ # HTTP layer
+└── infrastructure/ # DB, external services
+\`\`\`
+
+## Testing
+
+\`\`\`bash
+npm test # Run all tests
+npm run test:unit # Unit tests only
+npm run test:coverage # With coverage report
+\`\`\`
+
+## Deployment
+
+[Link to deployment docs or brief instructions]
+
+## Contributing
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md)
+
+## License
+
+[License type]
+```
+
+---
+
+### 12.2 ADR Format (Architectural Decision Records)
+
+**File:** `docs/decisions.md` or `docs/adr/NNN-title.md`
+
+**Template:**
+
+```markdown
+## ADR-XXX: [Short Title]
+
+**Date:** YYYY-MM-DD  
+**Status:** Proposed | Accepted | Superseded by ADR-YYY | Deprecated
+
+### Context
+
+What is the issue or decision we're facing? What constraints exist?
+
+### Decision
+
+What did we decide? Be specific and declarative.
+
+### Consequences
+
+**Positive:**
+
+- Benefit 1
+- Benefit 2
+
+**Negative:**
+
+- Trade-off 1
+- Risk 2
+
+**Neutral:**
+
+- Consideration 1
+
+### Alternatives Considered
+
+1. **Option A:** [Why rejected]
+2. **Option B:** [Why rejected]
+```
+
+**Example:**
+
+```markdown
+## ADR-042: Use Redis for Session Storage
+
+**Date:** 2026-01-02  
+**Status:** Accepted
+
+### Context
+
+Application needs distributed session storage for horizontal scaling.
+Sessions must survive application restarts.
+
+### Decision
+
+Use Redis for session storage with 24-hour TTL.
+
+### Consequences
+
+**Positive:**
+
+- Sub-millisecond read/write performance
+- Built-in TTL management
+- Horizontal scaling support
+
+**Negative:**
+
+- Additional infrastructure dependency
+- Sessions lost if Redis crashes (acceptable for our use case)
+
+### Alternatives Considered
+
+1. **PostgreSQL:** Too slow for session reads (20ms vs <1ms)
+2. **In-memory:** Doesn't survive restarts; no multi-instance support
+```
+
+---
+
+### 12.3 API Documentation Standards
+
+**OpenAPI 3.x MUST include:**
+
+- All endpoints with complete request/response schemas
+- Error responses (4xx, 5xx) with examples
+- Authentication/authorization requirements
+- Rate limits and pagination
+
+**Example:**
+
+```yaml
+paths:
+  /api/v1/users:
+    get:
+      summary: List users
+      description: Returns paginated list of users
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserListResponse"
+        "401":
+          description: Unauthorized
+```
+
+---
+
+## Navigation
+
+| Previous | Up | Next |
+|----------|-----|------|
+| [11 Task Tracking Protocol](./11-task-tracking-protocol.md) | [Index](./README.md) | [13 Ide Environment Setup](./13-ide-environment-setup.md) |
+</file>
+
+<file path="13-ide-environment-setup.md">
+# 13. IDE & Environment Setup
+
+**Source:** Universal-AGENTS.md lines 1978-2051  
+**Version:** 1.0.0  
+**Last Updated:** 2026-01-02
+
+---
+
+## 13. IDE & Environment Setup
+
+### 13.1 Development Environment
+
+**Supported Environments:**
+
+1. **Linux VM (Primary):** Preferred for native performance and tool compatibility.
+2. **WSL2 (Ubuntu):** Supported alternative for Windows users.
+
+**Core Requirements:**
+
+- **OS:** Ubuntu 22.04+ (or equivalent distro)
+- **Shell:** zsh (recommended) or bash
+- **Container Runtime:** Docker Engine + Docker Compose v2
+- **Node.js:** LTS Version (via nvm)
+- **Python:** 3.10+ (via pyenv)
+
+### 13.2 Cursor IDE Configuration
+
+**Recommended `settings.json`:**
+
+```json
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter"
+  },
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "telemetry.telemetryLevel": "off"
+}
+```
+
+**Required Extensions:**
+
+- ESLint (dbaeumer.vscode-eslint)
+- Prettier (esbenp.prettier-vscode)
+- Python (ms-python.python)
+- Docker (ms-azuretools.vscode-docker)
+- Ruff (charliermarsh.ruff)
+
+### 13.3 Docker Compose Template
+
+**File:** `docker-compose.yml`
+
+```yaml
+version: "3.8"
+
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    command: npm run dev
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
+```
+
+---
+
+## Navigation
+
+| Previous | Up | Next |
+|----------|-----|------|
+| [12 Documentation Standards](./12-documentation-standards.md) | [Index](./README.md) | [14 Project Templates](./14-project-templates.md) |
+</file>
+
+<file path="14-project-templates.md">
+# 14. Project Templates
+
+**Source:** Universal-AGENTS.md lines 2054-2094  
+**Version:** 1.0.0  
+**Last Updated:** 2026-01-02
+
+---
+
+## 14. Project Templates
+
+### 14.1 FastAPI Microservice
+
+**Quick Start:**
+
+```bash
+# 1. Create project structure
+mkdir my-service && cd my-service
+python -m venv venv
+source venv/bin/activate
+
+# 2. Install dependencies
+pip install fastapi uvicorn[standard] sqlalchemy pydantic-settings
+
+# 3. Create app entry point
+mkdir -p src/api
+touch src/main.py
+
+# 4. Initialize git
+git init
+echo "__pycache__/" > .gitignore
+echo "*.env" >> .gitignore
+```
+
+### 14.2 NextJS Web App
+
+**Quick Start:**
+
+```bash
+# 1. Initialize project
+npx create-next-app@latest my-app --typescript --tailwind --eslint
+
+# 2. Install common utils
+cd my-app
+npm install clsx tailwind-merge lucide-react class-variance-authority
+
+# 3. Setup Shadcn UI (optional)
+npx shadcn-ui@latest init
+```
+
+---
+
+## Navigation
+
+| Previous | Up | Next |
+|----------|-----|------|
+| [13 Ide Environment Setup](./13-ide-environment-setup.md) | [Index](./README.md) | [15 Agentic Framework Evaluation](./15-agentic-framework-evaluation.md) |
+</file>
+
+<file path="15-agentic-framework-evaluation.md">
+# 15. Agentic Framework Evaluation Criteria
+
+**Source:** Universal-AGENTS.md lines 2097-2442  
+**Version:** 1.0.0  
+**Last Updated:** 2026-01-02
+
+---
+
+## 15. Agentic Framework Evaluation Criteria
+
+### 15.1 Weighted Scoring Matrix
+
+The evaluation rubric uses a **weighted scoring system** with 9 criteria. Each criterion is scored 0-10, then multiplied by its weight to produce a weighted score.
+
+**Scoring Anchors (Standardized Scale):**
+
+- **10** = Exemplary/Native - Best-in-class implementation
+- **8** = Strong/First-party Integrated - Well-supported, production-ready
+- **5** = Adequate/Feasible with Moderate Code - Requires custom work
+- **3** = Weak/Complex - Significant custom development needed
+- **0** = Non-existent/Incompatible - Missing or fundamentally incompatible
+
+---
+
+#### Weighted Criteria Matrix
+
+| Criterion                        | Weight | Critical? | Description                                                                     |
+| -------------------------------- | ------ | --------- | ------------------------------------------------------------------------------- |
+| **Tool Usage & MCP Integration** | 5      | ✅ VETO   | Native tool model and MCP alignment; ease of MCP server/client interoperability |
+| **Multi-Agent Orchestration**    | 5      | ✅ VETO   | Built-in support for role-based agents, process graphs, and agent swarms        |
+| **Modularity & Extensibility**   | 5      | ✅ VETO   | Component swapability, vendor neutrality, ease of extension                     |
+| **State Management & Memory**    | 4      | —         | State persistence, long-running jobs, memory integration                        |
+| **Observability & Debugging**    | 4      | —         | Tracing/telemetry, introspection, explainability tools                          |
+| **Security & Human-in-the-Loop** | 4      | —         | Sandboxing/permissions, approval flows, safety mechanisms                       |
+| **Developer Experience (DX)**    | 5      | ✅ VETO   | Documentation, APIs, quick-start time, code clarity                             |
+| **Code Efficiency & Cost**       | 3      | —         | Token/latency efficiency, caching, budget tools                                 |
+| **Community & Momentum**         | 3      | —         | Activity, governance, roadmap alignment                                         |
+
+**Total Maximum Weighted Score:** 380 points
+
+---
+
+#### Criterion Details
+
+##### Tool Usage & MCP Integration — Weight 5 (Critical)
+
+**Definition:** Native tool abstraction and Model Context Protocol (MCP) alignment; ease of integrating MCP servers/clients.
+
+**Scoring Anchors:**
+
+- **10** = Native MCP support, exemplary tool abstraction
+- **8** = First-party MCP adapters, strong tool model
+- **5** = Feasible MCP integration with moderate custom code
+- **3** = Weak tool model, complex MCP integration required
+- **0** = No tool support or incompatible with MCP
+
+**VETO Trigger:** Score <5 triggers framework disqualification (see [Section 15.2](#152-veto-rules-enforced))
+
+---
+
+##### Multi-Agent Orchestration — Weight 5 (Critical)
+
+**Definition:** Built-in support for role-based agents, process graphs (DAGs), and agent swarms.
+
+**Scoring Anchors:**
+
+- **10** = Native multi-agent with DAG workflows, role assignment, delegation
+- **8** = Strong agent-to-agent communication, built-in orchestration patterns
+- **5** = Basic multi-agent possible with moderate custom code
+- **3** = Single-agent focused, multi-agent is bolted-on afterthought
+- **0** = No multi-agent support
+
+**VETO Trigger:** Score <5 triggers framework disqualification
+
+---
+
+##### Modularity & Extensibility — Weight 5 (Critical)
+
+**Definition:** Component swapability, vendor neutrality, and ease of adding new capabilities.
+
+**Scoring Anchors:**
+
+- **10** = Plug-and-play architecture, zero vendor lock-in, rich extension ecosystem
+- **8** = Well-defined interfaces, multiple providers supported
+- **5** = Moderate modularity, some abstractions present
+- **3** = Tightly coupled, difficult to swap components
+- **0** = Monolithic design, locked to single provider
+
+**VETO Trigger:** Score <5 triggers framework disqualification  
+**Reference:** See [Section 1.1 (Modularity)](#11-the-architecture-pillars--ilities) for architecture requirements
+
+---
+
+##### State Management & Memory — Weight 4
+
+**Definition:** State persistence across sessions, long-running job support, and memory integration.
+
+**Scoring Anchors:**
+
+- **10** = Native distributed state, built-in vector DB integration, seamless persistence
+- **8** = First-party state management with good persistence options
+- **5** = Basic state support, requires additional libraries
+- **3** = Stateless by default, complex to add persistence
+- **0** = No state management capabilities
+
+---
+
+##### Observability & Debugging — Weight 4
+
+**Definition:** Tracing, telemetry, introspection tools, and explainability features.
+
+**Scoring Anchors:**
+
+- **10** = Full distributed tracing, rich debugging UI, production-grade observability
+- **8** = Strong logging and tracing, good debug tooling
+- **5** = Basic logging, limited introspection
+- **3** = Minimal observability, debugging is difficult
+- **0** = Black-box execution, no visibility
+
+**Reference:** See [Section 1.6 (Observability)](#observability) for requirements
+
+---
+
+##### Security & Human-in-the-Loop (HITL) — Weight 4
+
+**Definition:** Sandboxing, permission controls, approval flows, and safety mechanisms.
+
+**Scoring Anchors:**
+
+- **10** = Enterprise-grade security, fine-grained permissions, native approval workflows
+- **8** = Strong sandboxing, good HITL support
+- **5** = Basic security controls, approval flows require custom code
+- **3** = Limited security features, HITL is complex to implement
+- **0** = No security or safety mechanisms
+
+**Reference:** See [Section 1.5 (Security)](#security) for requirements
+
+---
+
+##### Developer Experience (DX) — Weight 5 (Critical)
+
+**Definition:** Documentation quality, API design, quick-start time, and code clarity.
+
+**Scoring Anchors:**
+
+- **10** = Exceptional docs with examples, intuitive APIs, <15 min to first working agent
+- **8** = Comprehensive docs, strong TypeScript/typing, good IDE support
+- **5** = Adequate docs, APIs are usable but could be clearer
+- **3** = Poor docs, confusing APIs, steep learning curve
+- **0** = No documentation or unusable API design
+
+**VETO Trigger:** Score <5 triggers framework disqualification
+
+---
+
+##### Code Efficiency & Cost — Weight 3
+
+**Definition:** Token efficiency, latency overhead, caching mechanisms, and budget controls.
+
+**Scoring Anchors:**
+
+- **10** = Sophisticated caching, streaming, minimal overhead, budget tracking
+- **8** = Good efficiency, built-in caching options
+- **5** = Standard performance, basic caching available
+- **3** = High overhead, inefficient token usage
+- **0** = Severe performance issues or no cost controls
+
+---
+
+##### Community & Momentum — Weight 3
+
+**Definition:** Community activity, project governance, and alignment with industry trends.
+
+**Scoring Anchors:**
+
+- **10** = Vibrant community (thousands of contributors), stable governance, industry-backed
+- **8** = Active community, regular releases, good momentum
+- **5** = Moderate activity, stable project
+- **3** = Low activity, uncertain future
+- **0** = Abandoned (<100 stars, no commits in 3 months)
+
+---
+
+### 15.2 VETO Rules (ENFORCED)
+
+**Definition:** Critical gates that prevent production use of frameworks with fundamental flaws.
+
+**Critical Gate Trigger:**  
+Any **Weight-5 (Critical)** criterion scoring **<5** triggers **VETO 🚩**
+
+The four Critical criteria are:
+
+1. Tool Usage & MCP Integration
+2. Multi-Agent Orchestration
+3. Modularity & Extensibility
+4. Developer Experience (DX)
+
+---
+
+#### VETO Handling Process
+
+When a VETO flag is raised:
+
+1. **Provisional Disqualification** — Framework is flagged as unsuitable for production use
+2. **Mitigation Documentation** — Team MUST document specific, credible mitigation plan
+3. **ADR Creation** — Document veto override in `decisions.md` using [ADR format](#122-adr-format-architectural-decision-records):
+
+   ```markdown
+   ## ADR-XXX: Veto Override: [Criterion Name]
+
+   **Context:** Why [framework] scored <5 on [criterion]
+   **Decision:** Accepting framework despite veto
+   **Mitigation:** [Specific plan to address gap]
+   **Consequences:** [Risks and monitoring plan]
+   ```
+
+4. **Stakeholder Approval** — Technical leadership or project owner MUST explicitly approve override
+
+**Reference:** See [Section 0 (Deviation Protocol)](#deviation-protocol) for ADR requirements
+
+---
+
+### 15.3 Robustness Floor (ENFORCED)
+
+**Definition:** The minimum operational capability score across three production-critical criteria.
+
+**Formula:**
+
+```
+Robustness = min(State Management, Observability, Security/HITL)
+```
+
+**Enforcement Rules:**
+
+When `Robustness < 5`:
+
+- Flag **Robustness Risk ⚠️**
+- Cap Standalone Viability Score at: `min(SVS, SVS × 0.85)`
+- Document operational gaps in evaluation
+
+**Rationale:** Production systems require baseline capabilities in ALL operational areas. A framework excellent in observability but weak in security creates unacceptable risk.
+
+**Example:**
+
+| Criterion        | Score |
+| ---------------- | ----- |
+| State Management | 7     |
+| Observability    | 4     |
+| Security/HITL    | 8     |
+
+**Calculation:**
+
+- Robustness = min(7, 4, 8) = **4**
+- Robustness Risk ⚠️ **triggered**
+- SVS capped at 85% of calculated value
+
+---
+
+### 15.4 Standalone Viability Score (SVS)
+
+**Definition:** Normalized 0-100 score enabling cross-framework comparison.
+
+---
+
+#### Calculation Process
+
+**Step 1: Calculate Weighted Score**
+
+Sum all criterion scores multiplied by their weights:
+
+```
+Weighted Score = Σ(score × weight)
+
+Example:
+  (MCP: 8 × 5) + (Multi-Agent: 7 × 5) + (Modularity: 6 × 5) +
+  (State: 7 × 4) + (Observability: 6 × 4) + (Security: 7 × 4) +
+  (DX: 8 × 5) + (Efficiency: 6 × 3) + (Community: 7 × 3)
+= 40 + 35 + 30 + 28 + 24 + 28 + 40 + 18 + 21
+= 264
+```
+
+**Step 2: Apply VETO Adjustments**
+
+If any VETO flags exist and no approved ADR override:
+
+- Framework is **disqualified** (SVS = 0)
+- Evaluation terminates
+
+**Step 3: Apply Robustness Cap**
+
+If Robustness < 5:
+
+- Calculate: `Capped Score = min(Weighted Score, Weighted Score × 0.85)`
+
+**Step 4: Normalize to 0-100**
+
+```
+SVS = (Adjusted Weighted Score / 380) × 100
+```
+
+Continuing example (no VETO, Robustness = 6):
+
+```
+SVS = (264 / 380) × 100 = 69.47 → 69
+```
+
+---
+
+#### SVS Interpretation
+
+| SVS Range | Recommendation                                     | Use Cases                                                   |
+| --------- | -------------------------------------------------- | ----------------------------------------------------------- |
+| **≥85**   | **Recommended for Production**                     | Mission-critical systems, customer-facing applications      |
+| **70-84** | **Acceptable for Production with Gaps Documented** | Internal tools, non-critical systems with known limitations |
+| **50-69** | **Prototypes/Internal Tools Only**                 | Experimentation, proof-of-concepts, low-risk internal use   |
+| **<50**   | **Do Not Use**                                     | Unsuitable for any production or prototype use              |
+
+---
+
+#### Tie-Breaker Rules
+
+When two frameworks have equal SVS, apply the following in order:
+
+1. **Higher MCP Integration score** — Better tool ecosystem alignment
+2. **Higher Robustness** — Stronger operational baseline
+3. **Higher Developer Experience** — Easier to adopt and maintain
+4. **Higher Community & Momentum** — Better long-term viability
+
+**Example:**
+
+| Framework   | SVS | MCP | Robustness | Winner           |
+| ----------- | --- | --- | ---------- | ---------------- |
+| Framework A | 75  | 7   | 6          | —                |
+| Framework B | 75  | 8   | 5          | ✅ B (MCP 8 > 7) |
+
+---
+
+### 15.5 Evaluation Templates
+
+Pre-built templates for standardized framework evaluations are available:
+
+| Template           | Location                                      | Purpose                                         |
+| ------------------ | --------------------------------------------- | ----------------------------------------------- |
+| **Scoring Matrix** | `docs/templates/agentic-evaluation-matrix.md` | Full evaluation with all 9 criteria             |
+| **Decision Card**  | `docs/templates/framework-decision-card.md`   | Executive summary for stakeholder communication |
+
+**Usage:**
+
+1. Copy template to `docs/evaluations/[framework-name]-evaluation.md`
+2. Fill in scores with evidence-based justifications (≤140 chars per field)
+3. Calculate SVS following [Section 15.4](#154-standalone-viability-score-svs)
+4. Generate decision card for final recommendation
+
+**Example Evaluation:** See `docs/examples/sample-framework-evaluation.md`
+
+---
+
+## Navigation
+
+| Previous | Up | Next |
+|----------|-----|------|
+| [14 Project Templates](./14-project-templates.md) | [Index](./README.md) | [Appendix A Technology Matrix](./appendix-a-technology-matrix.md) |
+</file>
+
+<file path="appendix-a-technology-matrix.md">
+# Appendix A: Technology Decision Matrix
+
+**Source:** Universal-AGENTS.md lines 2446-2457  
+**Version:** 1.0.0  
+**Last Updated:** 2026-01-02
+
+---
+
+## Appendix A: Technology Decision Matrix
+
+| Technology     | Best For                               | Worst For                                | Key Trade-offs                    |
+| -------------- | -------------------------------------- | ---------------------------------------- | --------------------------------- |
+| **NextJS**     | SEO-heavy apps, E-commerce, Dashboards | Simple static sites, Native mobile       | High complexity, strict structure |
+| **Astro**      | Content sites, Blogs, Marketing pages  | Complex state management, Real-time apps | Limited interactivity patterns    |
+| **FastAPI**    | AI/ML backends, High-perf APIs         | Server-side HTML rendering               | Async ecosystem can be tricky     |
+| **NodeJS**     | Real-time chat, Streaming, I/O heavy   | CPU-intensive tasks (Video processing)   | Single-threaded bottlenecks       |
+| **Python**     | Data Science, Scripting, AI Wrappers   | Mobile apps, Frontend logic              | Slower execution speed            |
+| **PostgreSQL** | Tightly structured relational data     | Unstructured logs, High-velocity metrics | Scaling writes horizontally       |
+| **Redis**      | Caching, Sessons, Pub/Sub              | Durable long-term storage                | Memory cost                       |
+
+---
+
+## Navigation
+
+| Previous | Up | Next |
+|----------|-----|------|
+| [15 Agentic Framework Evaluation](./15-agentic-framework-evaluation.md) | [Index](./README.md) | [—](./—) |
+</file>
+
+<file path="README.md">
+# Universal Agentic Development Blueprint
+
+> **Single source of truth for all software development work**  
+> Establishes universal principles, workflows, agent protocols, and quality standards
+
+**Version:** 1.0.0  
+**Total Files:** 17 content files + index  
+**Original Source:** ~2,457 lines modularized for maintainability
+
+---
+
+## Quick Start
+
+Choose your reading path based on your role:
+
+| Role                       | Recommended Path                                                                                                                                                           |
+| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **New Developer**          | [Preamble](./00-preamble.md) → [Principles](./01-foundational-principles.md) → [Lifecycle](./02-development-lifecycle.md) → [Code Standards](./06-code-style-standards.md) |
+| **AI Agent Configuration** | [Agent Protocol](./03-agent-interaction-protocol.md) → [File Rules](./04-file-modification-rules.md) → [Search Efficiency](./05-search-efficiency.md)                      |
+| **DevOps Engineer**        | [CI/CD](./08-cicd-quality-gates.md) → [Testing](./09-testing-strategy.md) → [PR Hygiene](./10-pr-commit-hygiene.md)                                                        |
+
+---
+
+## Document Map
+
+| #   | File                                                                       | Section        | Description                                                    |
+| --- | -------------------------------------------------------------------------- | -------------- | -------------------------------------------------------------- |
+| 0   | [00-preamble.md](./00-preamble.md)                                         | Preamble       | Purpose, scope, deviation protocol                             |
+| 1   | [01-foundational-principles.md](./01-foundational-principles.md)           | Principles     | Architecture pillars (-ilities), API-first, Clean Architecture |
+| 2   | [02-development-lifecycle.md](./02-development-lifecycle.md)               | Lifecycle      | SDD + TDD methodology, test pyramid                            |
+| 3   | [03-agent-interaction-protocol.md](./03-agent-interaction-protocol.md)     | Agent Protocol | Guided execution, ECoR-V, feedback format                      |
+| 4   | [04-file-modification-rules.md](./04-file-modification-rules.md)           | File Rules     | Surgical edits, patch limits, diff validation                  |
+| 5   | [05-search-efficiency.md](./05-search-efficiency.md)                       | Search         | Safe autonomy, caching, token budgets                          |
+| 6   | [06-code-style-standards.md](./06-code-style-standards.md)                 | Code Style     | Python, TypeScript, React, Tailwind                            |
+| 7   | [07-tech-stack-reference.md](./07-tech-stack-reference.md)                 | Tech Stack     | Frontend, backend, AI/ML stack selection                       |
+| 8   | [08-cicd-quality-gates.md](./08-cicd-quality-gates.md)                     | CI/CD          | Pipeline order, GitHub Actions, quality gates                  |
+| 9   | [09-testing-strategy.md](./09-testing-strategy.md)                         | Testing        | Test pyramid, naming, coverage thresholds                      |
+| 10  | [10-pr-commit-hygiene.md](./10-pr-commit-hygiene.md)                       | PR/Commits     | Conventional commits, test tiers, PR templates                 |
+| 11  | [11-task-tracking-protocol.md](./11-task-tracking-protocol.md)             | Task Tracking  | Status legend, plan generation, dynamic ops                    |
+| 12  | [12-documentation-standards.md](./12-documentation-standards.md)           | Documentation  | README, ADR, API docs                                          |
+| 13  | [13-ide-environment-setup.md](./13-ide-environment-setup.md)               | IDE Setup      | Dev environment, Cursor config, Docker                         |
+| 14  | [14-project-templates.md](./14-project-templates.md)                       | Templates      | FastAPI, NextJS quickstarts                                    |
+| 15  | [15-agentic-framework-evaluation.md](./15-agentic-framework-evaluation.md) | Framework Eval | Scoring matrix, VETO rules, SVS                                |
+| A   | [appendix-a-technology-matrix.md](./appendix-a-technology-matrix.md)       | Tech Matrix    | Technology decision comparison table                           |
+
+---
+
+## Key Concepts
+
+### Enforcement Levels (RFC 2119)
+
+- **MUST** (ENFORCED) — Violation blocks work; no exceptions without explicit ADR
+- **SHOULD** (RECOMMENDED) — Strong preference; deviation requires justification
+- **MAY** (OPTIONAL) — Available option; no justification needed
+
+### Architecture Pillars
+
+All systems must exhibit these seven qualities:
+
+1. **Modularity** — Loosely coupled components
+2. **Scalability** — Handle 10x growth without redesign
+3. **Performance** — Meet explicit latency targets
+4. **Resiliency** — Graceful failure handling
+5. **Security** — Data protection and access control
+6. **Maintainability** — Readable, testable code
+7. **Observability** — Runtime visibility for debugging
+
+### Development Methodology
+
+- **Spec-Driven Development (SDD)** — Specifications before implementation
+- **Test-Driven Development (TDD)** — Tests before code (Red-Green-Refactor)
+- **API-First Design** — Contract-first development
+
+---
+
+## Navigation
+
+Each document includes:
+
+- **Content index** at the beginning for quick scanning
+- **Navigation footer** with prev/next/index links
+- **Cross-references** to related sections in other files
+
+Start with the [Preamble](./00-preamble.md) or navigate directly to any section above.
+
+---
+
+## Version History
+
+| Version | Date       | Changes                                           |
+| ------- | ---------- | ------------------------------------------------- |
+| 1.0.0   | 2026-01-02 | Initial modularization from `Universal-AGENTS.md` |
+</file>
+
+</files>
